@@ -5,6 +5,7 @@
 # local
 history.txt
 *.txt
+.simple_shell_history
 # Binaries for programs and plugins
 *.exe
 *.exe~
