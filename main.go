@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 	"custom-shell/helpers"
 )
@@ -36,7 +35,7 @@ func main() {
 			continue
 		}
 
-		if err := ExecuteInput(input); err != nil {
+		if err := helpers.ExecuteInput(input); err != nil {
 			helpers.LogMsg(fmt.Sprintf("Error executing input '%s': %v", strings.TrimSpace(input), err))
 			fmt.Fprintln(os.Stderr, "SHELL ➜ ", err)
 		}
