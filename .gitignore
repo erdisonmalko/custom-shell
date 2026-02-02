@@ -6,6 +6,8 @@
 history.txt
 *.txt
 .simple_shell_history
+shell-logs.log
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -28,7 +30,7 @@ profile.cov
 # Go workspace file
 go.work
 go.work.sum
-
+go.sum
 # env file
 .env
 
