@@ -5,6 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"context"
+    "os/signal"
+    "syscall"
 )
 
 func ExecuteInput(input string) error {
@@ -67,21 +70,33 @@ func ExecuteInput(input string) error {
 			}
 			return err
 		case "exit":
-			LogMsg("Exit command received, shutting down")
-			CloseLogger()
-			os.Exit(0)
+		LogMsg("Exit command received")
+		return fmt.Errorf("exit_requested") // Return a custom sentinel error
 	}
+
+	// Create a context that is naturally cancelled if we receive an Interrupt (Ctrl+C)
+    ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+    defer stop()
 
 	LogMsg(fmt.Sprintf("Running external command: %s", args[0]))
 	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin // Crucial for interactive commands like 'top' or 'vim'
 	
 	err := cmd.Run()
+	
+    // Check if the command was killed by a signal
+    if ctx.Err() != nil {
+        fmt.Println("^C")
+        return nil 
+    }
+
 	if err != nil {
 		LogMsg(fmt.Sprintf("Command '%s' failed: %v", args[0], err))
 	} else {
 		LogMsg(fmt.Sprintf("Command '%s' completed successfully", args[0]))
 	}
-	return err
+	
+    return err
 }
