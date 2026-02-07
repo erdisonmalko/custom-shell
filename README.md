@@ -94,8 +94,3 @@ go build
 **helpers/executeInput.go**:
 - `ExecuteInput()` - Main command execution logic
 - Handles cd, exit, history, and external commands
-
-## Future Enhancements
-#### WORK IN PROGRESS
-- Arrow key history navigation
-- Pipe (`|`) and redirection (`>`, `>>`) support

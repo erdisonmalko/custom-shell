@@ -58,42 +58,65 @@ func ShowHistory() error {
 	return nil
 }
 
-
+// MoveBetweenHistoryLines allows navigating through the command history based on the current line index 
+// and the direction (up/down). 
+// It returns the new line index and the corresponding command from the history.
 func MoveBetweenHistoryLines(currentLine int, direction string) (int, string, error) {
     data, err := os.ReadFile(SHELL_HISTORY_FILE)
     if err != nil {
         return currentLine, "", err
     }
     
-    lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-    totalLines := len(lines)
-    
-    if direction == "up" {
-        if currentLine > 0 {
-            currentLine--
-        }
-    } else if direction == "down" {
-        if currentLine < totalLines-1 {
-            currentLine++
-        }
-    }
-
-    // Safety check for empty files
-    if totalLines == 0 {
+    content := strings.TrimSpace(string(data))
+    if content == "" {
         return 0, "", nil
     }
+    
+    lines := strings.Split(content, "\n")
+    totalLines := len(lines)
+    
+    newIdx := currentLine
 
-    return currentLine, lines[currentLine], nil
+    if direction == "up" {
+        // If we are at the very end (totalLines), first 'up' goes to totalLines - 1
+        if newIdx > 0 {
+            newIdx--
+        }
+    } else if direction == "down" {
+        if newIdx < totalLines {
+            newIdx++
+        }
+    }
+
+    // If 'down' takes us back to the bottom (where the user was typing something new)
+    if newIdx >= totalLines {
+        return totalLines, "", nil
+    }
+
+    // Extract command (removing the "1 " prefix from your file format)
+    targetLine := lines[newIdx]
+    parts := strings.SplitN(targetLine, " ", 2)
+    cmd := targetLine
+    if len(parts) > 1 {
+        cmd = parts[1]
+    }
+
+    return newIdx, cmd, nil
 }
 
 
+// GetCurrentHistoryLine returns the current line index in the history file, 
+// which is essentially the count of commands stored. 
+// This is used to navigate through history with up/down keys.
 func GetCurrentHistoryLine() (int, error) {
-	//get the last line number from history file
-	data, err := os.ReadFile(SHELL_HISTORY_FILE)
-	if err != nil {
-		LogMsg(fmt.Sprintf("Error reading history file: %v", err))
-		return 0, err
-	}
-	lines := strings.Split(string(data), "\n")
-	return len(lines), nil
+    data, err := os.ReadFile(SHELL_HISTORY_FILE)
+    if err != nil {
+        return 0, nil // Return 0 if file doesn't exist yet
+    }
+    content := strings.TrimSpace(string(data))
+    if content == "" {
+        return 0, nil
+    }
+    lines := strings.Split(content, "\n")
+    return len(lines), nil 
 }
