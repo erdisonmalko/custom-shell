@@ -4,7 +4,7 @@ A lightweight shell implementation written in Go that provides basic command exe
 
 ## Features
 
-* **Real-time Key Listening**: Uses raw terminal mode to capture every keystroke, allowing for immediate feedback.
+* **Real-time Key Listening**: Uses raw terminal mode to capture keystroke, allowing for immediate feedback.
 * **Interactive History Scroll**: Use the **Up** and **Down** arrow keys to traverse your command history.
 * **Signal Awareness**: Intercepts `Ctrl+C` to clear the current buffer or interrupt running processes without crashing the shell.
 * **Smart Path Suggestions**: Provides contextual file/directory hints when typing `ls`, `cat`, `cd`, `vim`, or `nano` without arguments.
