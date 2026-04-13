@@ -2,6 +2,9 @@
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
 
+*.exe
+my-shell
+my-shell.exe
 # local
 history.txt
 *.txt

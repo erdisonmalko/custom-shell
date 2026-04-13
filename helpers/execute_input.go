@@ -30,7 +30,7 @@ func ExecuteInput(input string) error {
 	
 	// Show suggestions only if command has no arguments
 	if len(args) == 1 {
-		fileCmds := map[string]bool{"ls": true, "cat": true, "cd": true, "vim": true, "nano": true}
+		fileCmds := map[string]bool{"cat": true, "cd": true, "vim": true, "nano": true}
 		if fileCmds[cmdName] {
 			LogMsg(fmt.Sprintf("File command '%s' with no args, showing suggestions", cmdName))
 			
